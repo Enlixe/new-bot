@@ -13,6 +13,7 @@ module.exports = class extends Command {
 	}
 
 	async run(message, [command]) {
+
 		const embed = new MessageEmbed()
 			.setColor('BLUE')
 			.setAuthor(`${message.guild.name} Help Menu`, message.guild.iconURL({ dynamic: true }))

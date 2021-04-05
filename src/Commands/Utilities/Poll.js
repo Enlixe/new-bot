@@ -42,7 +42,9 @@ module.exports = class extends Command {
 			col++;
 		}
 		const embed = new MessageEmbed()
-			.setDescription(str.replace(/"/g, ''));
+			.setColor("BLUE")
+			.setDescription(str.replace(/"/g, ''))
+			.setFooter(`Requested by ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
 
 		const msg = await message.channel.send(embed);
 		for (let i = 0; i < regex.length; i++) {

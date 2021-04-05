@@ -7,7 +7,7 @@ module.exports = class extends Command {
     constructor(...args) {
 		super(...args, {
             description: `BAKA`,
-            category: 'NekosLife',
+            category: 'Anime',
             usage: `[user]`,
 		});
 	}

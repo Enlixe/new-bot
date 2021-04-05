@@ -1,11 +1,12 @@
 const Command = require('../../Structures/Command.js');
-const db = require('quick.db');
+const fs = require('fs');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
 
     constructor(...args) {
 		super(...args, {
-            description: `This is just a base for command, what r u doing here`,
+            description: `Warns user`,
             category: 'Moderation',
             usage: `<user>`,
             userPerms: [`ADMINISTRATOR`],
@@ -16,34 +17,36 @@ module.exports = class extends Command {
 
 	async run(message, args) {
         // Command Here
-        const user = message.mentions.members.first()
-        if(!user) {
-            return message.channel.send("Please Mention the person to who you want to warn - warn @mention <reaosn>")
+        let warns = JSON.parse(fs.readFileSync(`${__dirname}/warnings.json`, "utf8"))
+
+        const wUser = message.mentions.users.first() || message.guild.members.cache.get(args[0])
+        if(!wUser) {
+            return message.channel.send("Please Mention the person to who you want to warn - warn @mention <reason>")
         }
-        if(message.mentions.users.first().bot) {
-            return message.channel.send("You can not warn bots")
-        }
-        if(message.author.id === user.id) {
-            return message.channel.send("You can not warn yourself")
-        }
-        if(message.author.id === message.guild.owner.id) {
-            return message.channel.send("You jerk, how you can warn server owner ;-;")
+        
+        let reason = args.join(" ").slice(22);
+        if (!reason) reason = "No reason provided"
+
+        if(!warns[wUser.id]) warns[wUser.id] = {
+            warns: 0
         }
 
-        const reason = args.slice(1).join(" ")
-        if(!reason) {
-            return message.channel.send("Please provide reason to warn - warn @mention <reason>")
-        }
+        warns[wUser.id].warns++
 
-        let warnings = db.get(`warnings_${message.guild.id}_${user.id}`)
-        if(warnings === 3) {
-            return message.channel.send(`${message.mentions.users.first().username} already reached his/her limit with 3 warnings`)
-        }
-        if(warnings === null) {
-            db.set(`warnings_${message.guild.id}_${user.id}`, 1)
-            user.send(`You have been warned in **${message.guild.name}** for ${reason}`)
-            await message.channel.send(`You warned **${message.mentions.users.first().username}** for ${reason}`)//DO NOT FORGET TO USE ASYNC FUNCTION
-        }
+        fs.writeFile(`${__dirname}/warnings.json`, JSON.stringify(warns), (err) => {
+            if(err) console.log(err)
+        })
+
+        let embed = new MessageEmbed()
+        .setColor("RED")
+        //.setAuthor(message.author.username)
+        .setDescription("**Warns**")
+        .addField("Warned User:", `<@${wUser.id}>`)
+        .addField("Numbers of Warnings:", `${warns[wUser.id].warns}`)
+        .addField("Reason:", reason)
+
+        message.channel.send(embed)
+
 	}
 
 };

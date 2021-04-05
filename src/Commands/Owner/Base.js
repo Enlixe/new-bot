@@ -13,7 +13,8 @@ module.exports = class extends Command {
             guildOnly: true,
             ownerOnly: true,
             nsfw: false,
-            args: false
+            args: false,
+            ongoing: false
 		});
 	}
 

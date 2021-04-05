@@ -1,39 +1,50 @@
 const Command = require('../../Structures/Command.js');
-const db = require('quick.db');
+const fs = require('fs');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
 
     constructor(...args) {
 		super(...args, {
-            description: `This is just a base for command, what r u doing here`,
-            category: 'Moderation',
-            usage: `[user]`,
-            userPerms: [`ADMINISTRATOR`],
-            botPerms: [`ADMINISTRATOR`]
+                  aliases: [],
+                  description: `Clear user warn`,
+                  category: 'Moderation',
+                  usage: `<user>`
 		});
 	}
 
 	async run(message, args) {
         // Command Here
-        const user = message.mentions.members.first()
-        if(!user) {
-            return message.channel.send("Please mention the person whose warning you want to reset")
-        }
-        if(message.mentions.users.first().bot) {
-            return message.channel.send("Bot are not allowed to have warnings")
-        }
-        if(message.author.id === user.id) {
-            return message.channel.send("You are not allowed to reset your warnings")
-        }
-          
-        let warnings = db.get(`warnings_${message.guild.id}_${user.id}`)
-        if(warnings === null) {
-            return message.channel.send(`${message.mentions.users.first().username} do not have any warnings`)
+        let warns = JSON.parse(fs.readFileSync(`${__dirname}/warnings.json`, "utf8"))
+
+        const wUser = message.mentions.users.first() || message.guild.members.cache.get(args[0]);
+        if(!wUser) {
+            return message.channel.send("Please Mention the person to who you want to see warnings | clearwarn @mention")
         }
 
-        db.delete(`warnings_${message.guild.id}_${user.id}`)
-        user.send(`Your all warnings are reseted by ${message.author.username} from ${message.guild.name}`)
-        await message.channel.send(`Reseted all warnings of ${message.mentions.users.first().username}`) //DO NOT FORGET TO USE ASYNC FUNCTION
+        if(!warns[wUser.id]) warns[wUser.id] = {
+            warns: 0
+        }
+        let warnlevel = warns[wUser.id].warns;
+        let oldwarn = warnlevel;
+        if (warnlevel == 0) return message.reply("User had 0 warn. Cant clear")
+
+        // Clearing warn
+        
+        warns[wUser.id] = {
+            warns: 0
+        }
+
+        fs.writeFile(`${__dirname}/warnings.json`, JSON.stringify(warns), (err) => {
+            if(err) console.log(err)
+        })
+
+        let embed = new MessageEmbed()
+        .setColor("BLUE")
+        //.setAuthor(message.author.username)
+        .setDescription(`**Cleared \`${oldwarn}\` warnings for** <@${wUser.id}>`)
+
+        message.channel.send(embed)
 
 	}
 
