@@ -20,26 +20,36 @@ module.exports = class extends Command {
         .then(res => res.json()).then(body => {
 
             const hugEmb = new Discord.MessageEmbed()
-            .setColor(0xffffff)
-            .setImage(body.url);
+            .setColor('BLURPLE')
+            .setImage(body.url)
+            .setDescription(`<@${message.author.id}> hug ${args[0]}`);
+            
+            const hugbot = new Discord.MessageEmbed()
+            .setColor('BLURPLE')
+            .setImage(body.url)
+            .setDescription(`<@${message.author.id}> hug me.. Oh, thanks, b-but i\'m only a bot...`);
+            
             const sadEmb = new Discord.MessageEmbed()
-            .setColor(0xffffff)
-            .setImage('https://media.giphy.com/media/3oz8xLz5gnSla2STE4/giphy.gif');
+            .setColor('RED')
+            .setDescription(`<@${message.author.id}> hug <@${message.author.id}>.. Oh wait! You can't hug yourself!`)
+            
             const please = new Discord.MessageEmbed()
             .setDescription(`Please mention someone!`)
             .setColor(0xFF2222)
 
+            msg.delete()
+
             if (!args[0]) {
-                return message.channel.send(`<@${message.author.id}> hug <@${message.author.id}>.. Oh wait! You can't hug yourself!`, { embed: sadEmb });
+                return message.channel.send({ embed: sadEmb });
             }
             if (!message.mentions.users.first()) return message.channel.send(please).then(msg => {
                 // Delete message
             });
             if (message.mentions.users.first().id == 674601993964224522) {
-                return message.channel.send(`<@${message.author.id}> hug me.. Oh, thanks, b-but i\'m only a bot...`, { embed: hugEmb });
+                return message.channel.send({ embed: hugbot });
             }
 
-            return message.channel.send(`<@${message.author.id}> hug ${args[0]}`, { embed: hugEmb });
+            return message.channel.send({ embed: hugEmb });
             //.setColor('#ffa1ff')
         })
 	}

@@ -20,7 +20,10 @@ const answers = [
     "My reply is no.",
     "My sources say no.",
     "Outlook not so good.",
-    "Very doubtful."
+    "Very doubtful.",
+
+	"lol literally no",
+	
 ]
 /* const answers = [
 	'Maybe.',

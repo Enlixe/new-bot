@@ -22,7 +22,7 @@ module.exports = class extends Command {
         let embed = new MessageEmbed()
         .setColor("GREEN")
         //.setAuthor("Restarting")
-        .addField("Restarting", [
+        .addField("Announcement", [
             "\u200b",
             changecontent,
             "\u200b"

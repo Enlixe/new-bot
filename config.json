@@ -1,6 +1,7 @@
 {
     "prefix": "e/",
-    "token": "Njc0NjAxOTkzOTY0MjI0NTIy.Xjq-EA.eAn3mRUzEb8FlkxcUpZoGMnLMx4",
+    "token": "Njc0NjAxOTkzOTY0MjI0NTIy.Xjq-EA.Cy6KwaRRpKK_TzEN_E94DlpUBD0",
+    "token2": "Njc0NjAxOTkzOTY0MjI0NTIy.Xjq-EA.eAn3mRUzEb8FlkxcUpZoGMnLMx4",
     "owners": ["524805915526955048", "764893124610621440"],
     "defaultPerms": ["SEND_MESSAGES", "VIEW_CHANNEL"]
 }

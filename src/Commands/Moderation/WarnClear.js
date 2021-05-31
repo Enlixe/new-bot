@@ -6,7 +6,7 @@ module.exports = class extends Command {
 
     constructor(...args) {
 		super(...args, {
-                  aliases: [],
+                  aliases: ['clearwarn'],
                   description: `Clear user warn`,
                   category: 'Moderation',
                   usage: `<user>`
